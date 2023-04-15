@@ -107,10 +107,8 @@ ul li:hover {
 @media (max-width:617px) {
     .container {
         max-width: 450px;
-        margin-top: 190px;
-        margin-bottom: 190px;
-        width: auto;
-        font-size: 22px;
+        margin: 150px;
+        font-size: 20px;
     }
 }
 
