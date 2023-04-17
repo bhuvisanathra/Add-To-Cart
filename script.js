@@ -6,80 +6,110 @@ const appSettings = {
     databaseURL: "https://cart-f71b4-default-rtdb.firebaseio.com/"
 }
 
-// This function will connect our project with database link
-// Eastablish connection between firebase-database
-// And get database
 const app = initializeApp(appSettings)
 const database = getDatabase(app);
 
-//Created a refrence in which we will add all the movies
-const shoppingListinDB = ref(database, "ShoppingList")
+let databasename = document.getElementById("inputDatabase");
+let nameButton = document.getElementById("addButtonDatabase");
 
-// Connect HTML & CSS
-const inputField = document.getElementById("input");
-const button = document.getElementById("addButton");
-const shoppingList = document.getElementById("shopping-list");
+nameButton.addEventListener("click", function () {
 
-// Function
-button.addEventListener("click", function () {
-    let itemName = inputField.value;
-    inputFieldClear();
-    //If User doesnot Insert any Values
-    if (itemName != "")
-        push(shoppingListinDB, itemName);
-    // appendInnerHTML(itemName);
-})
+    let databasevalue = databasename.value;
+    // console.log(databasevalue);
 
-//Append Data from database
-
-onValue(shoppingListinDB, function (snapshot) {
-    if (snapshot.exists()) {
-        let listArry = Object.entries(snapshot.val());
-        //Clear InnerHtml to avoid Duplication
-        clearInnerHTML();
-
-        for (let i = 0; i < listArry.length; i++) {
-            let currentEntry = listArry[i];
-            let currentID = currentEntry[0];
-            let currentValue = currentEntry[1];
-            appendInnerHTML(currentEntry);
-        }
+    if (databasevalue != "") {
+        document.getElementById("heading2").innerHTML = `${databasevalue}'s List`;
+        document.getElementById("heading1").innerHTML = "Make Out Your List";
     } else {
-        shoppingList.innerHTML = `<button id="noitem">No Item Is There!!</button>`;
+        document.getElementById("heading1").innerHTML = "Enter Sufficient Data";
     }
-});
+    let shoppingListinDB = ref(database, databasevalue)
 
-//Functions
+    // Connect HTML & CSS
+    const inputField = document.getElementById("input");
+    const button = document.getElementById("addButton");
+    const shoppingList = document.getElementById("shopping-list");
 
-//Clear Inner HTML
-function clearInnerHTML() {
-    shoppingList.innerHTML = "";
-}
+    onValue(shoppingListinDB, function (snapshot) {
+        if (snapshot.exists()) {
+            let listArry = Object.entries(snapshot.val());
 
-//Clear InputField
-function inputFieldClear() {
-    inputField.value = "";
-}
+            clearInnerHTML();
 
-//Append InnerHTML
-function appendInnerHTML(entry) {
-    //shoppingList.innerHTML += `<li>${itemName}</li>`
-
-    //Extracting the Data
-    let itemID = entry[0]
-    let itemvalue = entry[1]
-
-    //Creating Li
-    let ElementLi = document.createElement("li");
-    ElementLi.textContent = itemvalue;
-
-    //Removing Logic
-    ElementLi.addEventListener("click", function () {
-        console.log(itemID);
-        let position = ref(database, `ShoppingList/${itemID}`);
-        remove(position);
+            for (let i = 0; i < listArry.length; i++) {
+                let currentEntry = listArry[i];
+                // let currentID = currentEntry[0];
+                // let currentValue = currentEntry[1];
+                appendInnerHTML(currentEntry);
+            }
+        } else {
+            shoppingList.innerHTML = `<button id="noitem">No Item Is There!!</button>`;
+        }
     });
 
-    //Appending the Values to It
-    shoppingList.append(ElementLi);
-}
+    // Function
+    button.addEventListener("click", function () {
+
+        let databasevalue = databasename.value;
+        let shoppingListinDB = ref(database, databasevalue)
+        let itemName = inputField.value;
+
+        inputFieldClear();
+
+        if (itemName != "")
+            push(shoppingListinDB, itemName);
+        // appendInnerHTML(itemName);
+
+        //Append Data from database
+        onValue(shoppingListinDB, function (snapshot) {
+            if (snapshot.exists()) {
+                let listArry = Object.entries(snapshot.val());
+
+                clearInnerHTML();
+
+                for (let i = 0; i < listArry.length; i++) {
+                    let currentEntry = listArry[i];
+                    let currentID = currentEntry[0];
+                    let currentValue = currentEntry[1];
+                    appendInnerHTML(currentEntry);
+                }
+            } else {
+                shoppingList.innerHTML = `<button id="noitem">No Item Is There!!</button>`;
+            }
+        });
+    })
+
+    //Functions
+
+    //Clear Inner HTML
+    function clearInnerHTML() {
+        shoppingList.innerHTML = "";
+    }
+
+    //Clear InputField
+    function inputFieldClear() {
+        inputField.value = "";
+    }
+
+    //Append InnerHTML
+    function appendInnerHTML(entry) {
+
+        //Extracting the Data
+        let itemID = entry[0]
+        let itemvalue = entry[1]
+
+        //Creating Li
+        let ElementLi = document.createElement("li");
+        ElementLi.textContent = itemvalue;
+
+        //Removing Logic
+        ElementLi.addEventListener("click", function () {
+            console.log(itemID);
+            let position = ref(database, `${databasevalue}/${itemID}`);
+            remove(position);
+        });
+
+        //Appending the Values to It
+        shoppingList.append(ElementLi);
+    }
+});
