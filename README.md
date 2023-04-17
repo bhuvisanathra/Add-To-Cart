@@ -1,5 +1,12 @@
 # Add-To-Cart
-Shopping List created using HTML, CSS and Javascript with FireBase as Database
+
+# Technology
+Frontend: HTML, CSS and JavaScript
+Database: Firebase
+
+# Description
+It is a user-friendly environment in which the user enters their name; if the user is new, there will be an empty list; otherwise, there will be data in the list that can be retrieved by putting the supplied name into that list, which will fetch it from Firebase.
+
 
 # Screenshots
 <div style="display: flex; justify-content: center; gap: 20px; max-width: 800px; margin: 0 auto;">
